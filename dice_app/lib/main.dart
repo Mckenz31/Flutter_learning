@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   return runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.purple,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.purple,
         title: Center(
           child: Text('Dice'),
         ),
@@ -16,8 +17,23 @@ void main() {
   ));
 }
 
-class Dices extends StatelessWidget {
-  // This widget is the root of your application.
+class Dices extends StatefulWidget {
+  @override
+  _DicesState createState() => _DicesState();
+}
+
+class _DicesState extends State<Dices> {
+  int leftBtnClick = 1;
+  int rightBtnClick = 1;
+
+  //Function that changes the values of the dices
+  changeDice(){
+    setState(() {
+      leftBtnClick = Random().nextInt(6) + 1;
+      rightBtnClick = Random().nextInt(6) + 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -26,17 +42,17 @@ class Dices extends StatelessWidget {
           Expanded(
             child: TextButton(
               onPressed: (){
-                print('Left button is clicked');
+                changeDice();
               },
-              child: Image.asset('images/dice1.png'),
+              child: Image.asset('images/dice$leftBtnClick.png'),
             ),
           ),
           Expanded(
             child: TextButton(
               onPressed: (){
-                print('Right button is clicked');
+                changeDice();
               },
-              child: Image.asset('images/dice1.png'),
+              child: Image.asset('images/dice$rightBtnClick.png'),
             ),
           ),
         ],
