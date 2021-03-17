@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/data.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,21 +34,72 @@ class _QuizAppState extends State<QuizApp> {
 
   List<Icon> score = [];
 
-  List<String> questions = [
-    'You are an amazing person',
-    'A cat has 3 legs',
-    'Brazil is the 2nd biggest country in the entire world',
-    'SriLanka is located in South Asia'
-  ];
+  QuestionLists questionList = QuestionLists();
 
-  List<bool> answers = [
-    true,
-    false,
-    false,
-    true
-  ];
-
-  int questionNumber = 0;
+  void checkAnswer(bool userAnswer) {
+    setState(() {
+      //Checking if it's the correct answer
+      if(questionList.isFinished() == true){
+        questionList.reset();
+        score = [];
+        Alert(
+          context: context,
+          title: "COMPLETED",
+          desc: "You did a great job",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "DONE"
+              ),
+              onPressed: () => Navigator.pop(context),
+            )
+          ]
+        ).show();
+        // Alert(
+        //   context: context,
+        //   type: AlertType.error,
+        //   title: "COMPLETED",
+        //   desc: "You did a great job",
+        //   buttons: [
+        //     DialogButton(
+        //       child: Text(
+        //         "DONE",
+        //         style: TextStyle(color: Colors.white, fontSize: 20),
+        //       ),
+        //       onPressed: (){
+        //         setState(() {
+        //           Navigator.pop(context);
+        //           score = [];
+        //         });
+        //       },
+        //       width: 120,
+        //     ),
+        //   ],
+        // ).show();
+      }
+      else{
+        bool answer = userAnswer;
+        if(questionList.getAnswer() == answer){
+          score.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        }
+        else{
+          score.add(
+            Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+          );
+        }
+        questionList.updateQueNumber();
+        //The user picked true.
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +114,7 @@ class _QuizAppState extends State<QuizApp> {
           padding: EdgeInsets.all(10.0),
           child: Center(
             child: Text(
-              questions[questionNumber],
+              questionList.getQuestion(),
             textAlign: TextAlign.center,
             style: TextStyle(
             fontSize: 25.0,
@@ -86,26 +139,7 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if(answers[questionNumber] == true){
-                    score.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  }
-                  else{
-                    score.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  questionNumber++;
-
-                });
+                checkAnswer(true);
                 //The user picked true.
               },
             ),
@@ -126,26 +160,7 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if(answers[questionNumber] == false){
-                    score.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  }
-                  else{
-                    score.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  questionNumber++;
-                //The user picked true.
-                },);
+                checkAnswer(false);
               }
             ),
           ),
