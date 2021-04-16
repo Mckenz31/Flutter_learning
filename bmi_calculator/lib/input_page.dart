@@ -1,9 +1,17 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import 'CardIconDeets.dart';
+import 'uicard.dart';
 
 const bottomContainerButton = 70.0;
 const Color activeExpandedWidgetColor = Color(0xFF1D1E33);
+const Color inactiveExpandedWidgetColor = Color(0xFF111328);
 const Color bottomContainerColor = Colors.red;
+
+enum Gender {
+  male,
+  female
+}
 
 class InputPage extends StatefulWidget {
 
@@ -12,6 +20,8 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+
+  Gender selectedGender;
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +38,30 @@ class _InputPageState extends State<InputPage> {
               children: <Widget>[
                 Expanded(
                   child: UICard(
-                    colour: activeExpandedWidgetColor,
-                    cardChild: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.mars,
-                          size: 80.0,
-                        ),
-                        SizedBox(
-                          height: 15.0,
-                        ),
-                        Text(
-                          "Male",
-                          style: TextStyle(
-                            color: Color(0xFF8D8E98),
-                            fontSize: 18.0
-                          ),
-                        )
-                      ],
+                    onPress: (){
+                      setState(() {
+                        selectedGender = Gender.male;
+                      });
+                    },
+                    colour: selectedGender == Gender.male ? activeExpandedWidgetColor: inactiveExpandedWidgetColor,
+                    cardChild: CardIconDeets(
+                        iconz: FontAwesomeIcons.male,
+                        textz: 'Male'
                     ),
                   ),
                 ),
                 Expanded(
                   child: UICard(
-                    colour: activeExpandedWidgetColor,
+                    onPress: (){
+                      setState(() {
+                        selectedGender = Gender.female;
+                      });
+                    },
+                    colour: selectedGender == Gender.female ? activeExpandedWidgetColor: inactiveExpandedWidgetColor,
+                    cardChild: CardIconDeets(
+                        iconz: FontAwesomeIcons.female,
+                        textz: "Female"
+                    ),
                   ),
                 ),
               ],
@@ -92,22 +101,3 @@ class _InputPageState extends State<InputPage> {
   }
 }
 
-class UICard extends StatelessWidget {
-  UICard({@required this.colour, this.cardChild});
-
-  final Color colour;
-  final Widget cardChild;
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: cardChild,
-      margin: EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-          color: colour,
-          borderRadius: BorderRadius.circular(10.0)
-      ),
-    );
-  }
-}
