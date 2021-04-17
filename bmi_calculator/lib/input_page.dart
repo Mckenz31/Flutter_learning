@@ -2,11 +2,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'CardIconDeets.dart';
 import 'uicard.dart';
-
-const bottomContainerButton = 70.0;
-const Color activeExpandedWidgetColor = Color(0xFF1D1E33);
-const Color inactiveExpandedWidgetColor = Color(0xFF111328);
-const Color bottomContainerColor = Colors.red;
+import 'constants.dart';
 
 enum Gender {
   male,
@@ -22,6 +18,7 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
 
   Gender selectedGender;
+  int height = 180;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +29,7 @@ class _InputPageState extends State<InputPage> {
           )
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
             child: Row(
@@ -43,7 +41,7 @@ class _InputPageState extends State<InputPage> {
                         selectedGender = Gender.male;
                       });
                     },
-                    colour: selectedGender == Gender.male ? activeExpandedWidgetColor: inactiveExpandedWidgetColor,
+                    colour: selectedGender == Gender.male ? kActiveExpandedWidgetColor: kInactiveExpandedWidgetColor,
                     cardChild: CardIconDeets(
                         iconz: FontAwesomeIcons.male,
                         textz: 'Male'
@@ -57,7 +55,7 @@ class _InputPageState extends State<InputPage> {
                         selectedGender = Gender.female;
                       });
                     },
-                    colour: selectedGender == Gender.female ? activeExpandedWidgetColor: inactiveExpandedWidgetColor,
+                    colour: selectedGender == Gender.female ? kActiveExpandedWidgetColor: kInactiveExpandedWidgetColor,
                     cardChild: CardIconDeets(
                         iconz: FontAwesomeIcons.female,
                         textz: "Female"
@@ -69,7 +67,51 @@ class _InputPageState extends State<InputPage> {
           ),
           Expanded(
             child: UICard(
-              colour: activeExpandedWidgetColor
+              colour: kActiveExpandedWidgetColor,
+              cardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'HEIGHT',
+                    style: kLabelStyle,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.ideographic,
+                    children: <Widget>[
+                      Text(
+                        height.toString(),
+                        style: kNumberLabelStyle,
+                      ),
+                      Text(
+                        'cm',
+                        style: kLabelStyle,
+                      ),
+                    ],
+                  ),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: Colors.white,
+                      inactiveTrackColor: Color(0xFF8D8E98),
+                      thumbColor: Color(0xFFEB1555),
+                      overlayColor: Color(0x29EB1555),
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0),
+                    ),
+                    child: Slider(
+                      value: height.toDouble(),
+                      min: 70,
+                      max: 230,
+                      onChanged: (double newValue){
+                        setState(() {
+                          height = newValue.round();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -77,21 +119,21 @@ class _InputPageState extends State<InputPage> {
                 children: <Widget>[
                   Expanded(
                     child: UICard(
-                      colour: activeExpandedWidgetColor,
+                      colour: kActiveExpandedWidgetColor,
                     ),
                   ),
                   Expanded(
                     child: UICard(
-                      colour: activeExpandedWidgetColor,
+                      colour: kActiveExpandedWidgetColor,
                     ),
                   ),
                 ],
-              )
+              ),
           ),
           Container(
             margin: EdgeInsets.only(top: 10.0),
-            color: bottomContainerColor,
-            height: bottomContainerButton,
+            color: kBottomContainerColor,
+            height: kBottomContainerButton,
             width: double.infinity,
           ),
         ],
