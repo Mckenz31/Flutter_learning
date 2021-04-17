@@ -19,6 +19,8 @@ class _InputPageState extends State<InputPage> {
 
   Gender selectedGender;
   int height = 180;
+  int weight = 50;
+  int age = 24;
 
   @override
   Widget build(BuildContext context) {
@@ -120,11 +122,85 @@ class _InputPageState extends State<InputPage> {
                   Expanded(
                     child: UICard(
                       colour: kActiveExpandedWidgetColor,
+                      cardChild: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'WEIGHT',
+                            style: kLabelStyle,
+                          ),
+                          Text(
+                            weight.toString(),
+                            style: kNumberLabelStyle,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RoundIconWidget(
+                                iconSign: FontAwesomeIcons.minus,
+                                updateWeightOnPress: (){
+                                  setState(() {
+                                    weight--;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                  width: 10.0,
+                              ),
+                              RoundIconWidget(
+                                iconSign: FontAwesomeIcons.plus,
+                                updateWeightOnPress: (){
+                                  setState(() {
+                                    weight++;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
                     child: UICard(
                       colour: kActiveExpandedWidgetColor,
+                      cardChild: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'AGE',
+                            style: kLabelStyle,
+                          ),
+                          Text(
+                            age.toString(),
+                            style: kNumberLabelStyle,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RoundIconWidget(
+                                iconSign: FontAwesomeIcons.minus,
+                                updateWeightOnPress: (){
+                                  setState(() {
+                                    age--;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              RoundIconWidget(
+                                iconSign: FontAwesomeIcons.plus,
+                                updateWeightOnPress: (){
+                                  setState(() {
+                                    age++;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -143,3 +219,25 @@ class _InputPageState extends State<InputPage> {
   }
 }
 
+class RoundIconWidget extends StatelessWidget {
+
+  RoundIconWidget({@required this.iconSign, @required this.updateWeightOnPress});
+
+  final IconData iconSign;
+  final Function updateWeightOnPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      elevation: 0.0,
+      onPressed: updateWeightOnPress,
+      shape: CircleBorder(),
+      child: Icon(iconSign),
+      constraints: BoxConstraints.tightFor(
+        width: 50.0,
+        height: 50.0
+      ),
+      fillColor: Color(0xFF4C4F5E),
+    );
+  }
+}
