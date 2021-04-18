@@ -14,3 +14,29 @@ const kNumberLabelStyle = TextStyle(
   fontSize: 50.0,
   fontWeight: FontWeight.w900,
 );
+
+const kLargeButtonStyle = TextStyle(
+  fontSize: 30.0,
+  fontWeight: FontWeight.bold,
+);
+
+const kResultTitleStyle = TextStyle(
+  fontSize: 40.0,
+  fontWeight: FontWeight.bold,
+);
+
+const kResultStatusStyle = TextStyle(
+  fontSize: 25.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.cyanAccent,
+);
+
+const kResultStyle = TextStyle(
+  fontSize: 100.0,
+  fontWeight: FontWeight.bold
+);
+
+const kResultCommentStyle = TextStyle(
+  fontSize: 25.0,
+  fontWeight: FontWeight.bold,
+);
