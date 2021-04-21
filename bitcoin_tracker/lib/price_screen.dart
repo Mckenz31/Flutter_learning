@@ -2,15 +2,31 @@ import 'package:flutter/material.dart';
 import 'coin_dart.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
+// import 'loading.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
   _PriceScreenState createState() => _PriceScreenState();
+
+  PriceScreen({this.currencyData});
+
+  final currencyData;
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-
   String initialOption = 'USD';
+
+  Text currencyValue(){
+    var currency = widget.currencyData['rate'].toInt();
+    return Text(
+      '1 BTC = $currency USD',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 20.0,
+        color: Colors.white,
+      ),
+    );
+  }
 
   DropdownButton<String> androidPicker() {
     List<DropdownMenuItem<String>> currencyName = [];
@@ -22,34 +38,34 @@ class _PriceScreenState extends State<PriceScreen> {
       );
       currencyName.add(newItem);
     }
-      return DropdownButton<String>(
-        value: initialOption,
-        items: currencyName,
-        onChanged: (value) {
-          setState(() {
-            initialOption = value;
-          });
-        },
+    return DropdownButton<String>(
+      value: initialOption,
+      items: currencyName,
+      onChanged: (value) {
+        setState(() {
+          initialOption = value;
+        });
+      },
+    );
+  }
+
+  CupertinoPicker iOSPicker() {
+    List<Text> pickerItems = [];
+
+    for (String currency in currenciesList) {
+      pickerItems.add(
+        Text(currency),
       );
     }
 
-    CupertinoPicker iOSPicker(){
-      List<Text> pickerItems = [];
+    return CupertinoPicker(
+      backgroundColor: Colors.redAccent,
+      itemExtent: 30.0,
+      onSelectedItemChanged: (selectedIndex) {},
+      children: pickerItems,
+    );
+  }
 
-      for(String currency in currenciesList){
-        pickerItems.add(
-          Text(currency),
-        );
-      }
-
-      return CupertinoPicker(
-        backgroundColor: Colors.redAccent,
-        itemExtent: 30.0,
-        onSelectedItemChanged: (selectedIndex){
-        },
-        children: pickerItems,
-      );
-    }
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +87,7 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
+                child: currencyValue(),
               ),
             ),
           ),
