@@ -1,8 +1,7 @@
 import 'package:bitcoin_tracker/price_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'networking.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -10,38 +9,31 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  String url = '';
 
   @override
   void initState() {
-    super.initState();
-    getLocation();
+    getData();
   }
-
-  void getLocation() async {
-    http.Response response = await http.get(
-      Uri.parse(url),
-    );
-
-    if(response.statusCode == 200){
-      String data = response.body;
-      var decodedData = jsonDecode(data);
+  
+  getData() async{
+    Networking network = Networking();
+    var currencySet = await network.getCurrencyData();
+    var BTCdata = currencySet[0];
+    var ETHdata = currencySet[1];
+    var LTCdata = currencySet[2];
+    if(BTCdata != null && ETHdata != null && LTCdata != null){
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) {
+          builder: (context){
             return PriceScreen(
-              currencyData: decodedData,
+              BTCcurrencyData: BTCdata, ETHCurrencyData: ETHdata, LTCCurrencyData: LTCdata,
             );
           },
         ),
       );
     }
-    else{
-      print(response.statusCode);
-    }
   }
-
 
   @override
   Widget build(BuildContext context) {

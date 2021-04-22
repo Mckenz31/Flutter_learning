@@ -2,30 +2,50 @@ import 'package:flutter/material.dart';
 import 'coin_dart.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
-// import 'loading.dart';
+import 'networking.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
   _PriceScreenState createState() => _PriceScreenState();
 
-  PriceScreen({this.currencyData});
+  PriceScreen({this.BTCcurrencyData, this.ETHCurrencyData, this.LTCCurrencyData});
 
-  final currencyData;
+  final BTCcurrencyData;
+  final ETHCurrencyData;
+  final LTCCurrencyData;
 }
 
 class _PriceScreenState extends State<PriceScreen> {
   String initialOption = 'USD';
+  var BTCcurrency;
+  var ETHcurrency;
+  var LTCcurrency;
 
-  Text currencyValue(){
-    var currency = widget.currencyData['rate'].toInt();
-    return Text(
-      '1 BTC = $currency USD',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 20.0,
-        color: Colors.white,
-      ),
-    );
+  @override
+  void initState() {
+    getCurrency();
+  }
+
+  void getCurrency(){
+    BTCcurrency = widget.BTCcurrencyData['rate'].toInt();
+    ETHcurrency = widget.ETHCurrencyData['rate'].toInt();
+    LTCcurrency = widget.LTCCurrencyData['rate'].toInt();
+
+  }
+
+  void changeCurrency(initialValue) async{
+    Networking networking = Networking();
+    var currencies = [];
+    currencies = await networking.getSelectedCurrencyData(initialValue);
+
+    var BTCdata = currencies[0];
+    var ETHdata = currencies[1];
+    var LTCdata = currencies[2];
+    setState(() {
+      BTCcurrency = BTCdata['rate'].toInt();
+      ETHcurrency = ETHdata['rate'].toInt();
+      LTCcurrency = LTCdata['rate'].toInt();
+    });
   }
 
   DropdownButton<String> androidPicker() {
@@ -44,6 +64,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           initialOption = value;
+          changeCurrency(initialOption);
         });
       },
     );
@@ -87,7 +108,56 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: currencyValue(),
+                child: Text(
+                  '1 BTC = $BTCcurrency $initialOption',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.redAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                child: Text(
+                  '1 ETH = $ETHcurrency $initialOption',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.redAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                child: Text(
+                  '1 LTC = $LTCcurrency $initialOption',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
