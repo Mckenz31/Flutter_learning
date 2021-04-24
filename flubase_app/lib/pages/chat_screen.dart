@@ -4,6 +4,8 @@ import 'package:flubase_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+String loggedInUser;
+
 class ChatScreen extends StatefulWidget {
   static const id = 'chat_screen';
 
@@ -16,7 +18,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final txtController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  String loggedInUser;
   String message;
 
   @override
@@ -98,7 +99,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       txtController.clear();
                       _firestore.collection('messages').add({
                         'text': message,
-                        'sender': loggedInUser
+                        'sender': loggedInUser,
+                        'timestamp': FieldValue.serverTimestamp(),
                       });
                     },
                     child: Text(
@@ -127,7 +129,7 @@ class TextStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore.collection('messages').orderBy('timestamp').snapshots(),
       builder: (context, snapshot){
 
         if(!snapshot.hasData){
@@ -138,16 +140,21 @@ class TextStream extends StatelessWidget {
           );
         }
         List<TextBubbles> messageSet = [];
-        final incomingData = snapshot.data.docs;
+        final incomingData = snapshot.data.docs.reversed;
         for(var mssgDeets in incomingData){
           var messageDeet = mssgDeets.data()['text'];
           var messageSender = mssgDeets.data()['sender'];
-          final mssgWidget = TextBubbles(messageDeet: messageDeet, messageSender: messageSender);
+          final mssgWidget = TextBubbles(
+            messageDeet: messageDeet,
+            messageSender: messageSender,
+            myText: loggedInUser == messageSender,
+          );
           messageSet.add(mssgWidget);
         }
 
         return Expanded(
           child: ListView(
+            reverse: true,
             children: messageSet,
           ),
         );
@@ -158,17 +165,20 @@ class TextStream extends StatelessWidget {
 
 class TextBubbles extends StatelessWidget {
 
-  TextBubbles({this.messageDeet, this.messageSender});
+  TextBubbles({this.messageDeet, this.messageSender, this.myText});
 
   final String messageDeet;
   final String messageSender;
+  final bool myText;
+
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: myText ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
             '$messageSender',
@@ -178,9 +188,9 @@ class TextBubbles extends StatelessWidget {
             ),
           ),
           Material(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: myText ? BorderRadius.only(topLeft: Radius.circular(30.0), bottomLeft: Radius.circular(30.0),         bottomRight: Radius.circular(30.0)): BorderRadius.only(topRight: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)),
             elevation: 6.0,
-            color: Colors.lightBlueAccent,
+            color: myText ? Colors.lightBlueAccent : Colors.redAccent,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
