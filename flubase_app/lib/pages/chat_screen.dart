@@ -1,5 +1,7 @@
+import 'package:flubase_app/pages/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flubase_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatScreen extends StatefulWidget {
   static const id = 'chat_screen';
@@ -9,6 +11,32 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  final _auth = FirebaseAuth.instance;
+  String loggedInUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async{
+
+    try{
+      final user = await _auth.currentUser;
+      if(user != null){
+        loggedInUser = user.email;
+        print(loggedInUser);
+      }
+    }
+    catch(e){
+      print(e);
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +46,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                //Implement logout functionality
+                _auth.signOut();
+                Navigator.popUntil( context, ModalRoute.withName(WelcomeScreen.id));
               }),
         ],
         title: Text('⚡️Chat'),
@@ -37,14 +66,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        //Do something with the user input.
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      //Implement send functionality.
+
                     },
                     child: Text(
                       'Send',
