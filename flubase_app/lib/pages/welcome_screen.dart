@@ -76,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         Colors.yellow,
                         Colors.red,
                       ],
-                    )
+                    ),
                   ],
                 ),
               ],
