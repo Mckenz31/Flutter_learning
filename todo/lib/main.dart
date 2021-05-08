@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/screens/tasks.dart';
+import 'models/task_data.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,17 +10,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //Changed the underline color for the text field in the modal
-      theme: ThemeData(
-          inputDecorationTheme: InputDecorationTheme(
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.red)
-            ),
-          )
+    return ChangeNotifierProvider(
+      create: (context) => TaskData(),
+      child: MaterialApp(
+        theme: ThemeData(
+            inputDecorationTheme: InputDecorationTheme(
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)
+              ),
+            )
+        ),
+        debugShowCheckedModeBanner: false,
+        home: Tasks(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: Tasks(),
     );
   }
 }

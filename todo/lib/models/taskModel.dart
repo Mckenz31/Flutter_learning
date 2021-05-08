@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class Task{
+class TaskModel{
 
   final String name;
-  bool isChecked;
+  bool isChecked = false;
 
-  Task({@required this.name, @required this.isChecked});
+  TaskModel({@required this.name, this.isChecked});
 
   void toggle(){
     isChecked = !isChecked;

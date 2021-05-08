@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todo/widgets/task_list.dart';
 import 'package:todo/widgets/add_task_modal.dart';
+import 'package:todo/models/taskModel.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/models/task_data.dart';
 
 class Tasks extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.redAccent,
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () {
           showModalBottomSheet(
             isScrollControlled: true,
             shape: RoundedRectangleBorder(
@@ -17,12 +21,22 @@ class Tasks extends StatelessWidget {
                 topRight: Radius.circular(20.0),
               ),
             ),
-            context: context, builder: (context) => SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: AddTask(),
+            context: context,
+            builder: (context) => SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: AddTask((newValue) {
+                  // setState(() {
+                  //   tasks.add(
+                  //     TaskModel(name: newValue),
+                  //   );
+                  //   Navigator.pop(context);
+                  // });
+                }),
+              ),
             ),
-          ));
+          );
         },
         backgroundColor: Colors.redAccent,
         child: Icon(Icons.add),
@@ -31,7 +45,8 @@ class Tasks extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(top: 55.0, left: 30.0, right: 30.0, bottom: 30),
+            padding:
+                EdgeInsets.only(top: 55.0, left: 30.0, right: 30.0, bottom: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,7 +70,7 @@ class Tasks extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 tasks',
+                  '${Provider.of<TaskData>(context).tasks.length} tasks',
                 ),
               ],
             ),
@@ -63,12 +78,11 @@ class Tasks extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30.0),
-                  topLeft: Radius.circular(30.0),
-                )
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30.0),
+                    topLeft: Radius.circular(30.0),
+                  )),
               child: TaskList(),
             ),
           ),
@@ -77,4 +91,3 @@ class Tasks extends StatelessWidget {
     );
   }
 }
-
